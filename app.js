@@ -4,32 +4,26 @@ var myMovieList = document.querySelector("ul");
 var movieHistory = document.querySelector("#movieHistoryCard");
 const filterInput = document.getElementById("filter");
 
-// This function reads the local storage and returns an object
-const readLocalStorage = () => {
-  if (!JSON.parse(window.localStorage.getItem('localMovieList'))) {
-    return {};
+// This function reads the local storage and returns an object or array
+const readLocalStorage = (localItem) => {
+  if (localItem === 'localMovieList') {
+    if (!JSON.parse(window.localStorage.getItem(localItem))) {
+      return [];
+    } else {
+      return JSON.parse(window.localStorage.getItem(localItem));
+    }
   } else {
-    return JSON.parse(window.localStorage.getItem('localMovieList'));
+    if (!JSON.parse(window.localStorage.getItem(localItem))) {
+      return {};
+    } else {
+      return JSON.parse(window.localStorage.getItem(localItem));
+    }
   }
 }
 
-// This function reads the session storage and returns an array
-const readSessionStorage = () => {
-  if (!JSON.parse(window.sessionStorage.getItem("sessionMovieList"))) {
-    return [];
-  } else {
-    return JSON.parse(window.sessionStorage.getItem("sessionMovieList"));
-  }
-}
-
-// This function takes an object and writes it to local storage
-const writeLocalStorage = (localMovieList) => {
-  window.localStorage.setItem('localMovieList', JSON.stringify(localMovieList));
-}
-
-// This function takes an array and writes it to session storage
-const writeSessionStorage = (sessionMovieList) => {
-  window.sessionStorage.setItem('sessionMovieList', JSON.stringify(sessionMovieList));
+// This function takes an object or array and writes it to local storage
+const writeLocalStorage = (list, localLocation) => {
+  window.localStorage.setItem(localLocation, JSON.stringify(list));
 }
 
 // This function creates and populates the HTML Movie History table
@@ -45,15 +39,10 @@ const makeTable = (historyList) => {
       .join("")}</table>`;
 }
 
-// This function creates and populates the HTML Movie List
-
-
 // This function will titleCase the movie title
 const titleCase = (title) => {
   return title.toLowerCase().split(' ').map((word) => word.replace(word.charAt(0), word.charAt(0).toUpperCase())).join(' ');
 }
-
-
 
 // Example of a simple function that clears the input after a user types something in
 function clearInput() {
@@ -63,13 +52,13 @@ function clearInput() {
 function clearMovies() {
   // To delete all children of the <ul></ul> (meaning all <li>'s)..we can wipe out the <ul>'s innerHTMLs
   myMovieList.innerHTML = "";
-  sessionStorage.clear();
+  localStorage.removeItem('localMovieList');
 }
 
 // This function creates and populates the HTML Movie List
-const makeListWrap = (sessionList) => {
+const makeListWrap = (movieList) => {
   myMovieList.innerHTML = ``;
-  sessionList.map((movie) => makeList(movie));
+  movieList.map((movie) => makeList(movie));
 }
 
 // This function creates a List item
@@ -97,10 +86,10 @@ function addMovie() {
   var userTypedText = titleCase(text);
 
   // Read local storage and create watch history list object
-  const historyList = readLocalStorage();
+  const historyList = readLocalStorage('localHistoryList');
 
-  // Read session storage and create movie list array
-  const sessionList = readSessionStorage();
+  // Read local storage and create movie list array
+  const movieList = readLocalStorage('localMovieList');
 
   // Use Alert if the user does not enter a value for the movie name.
   if (userTypedText === "") {
@@ -111,17 +100,17 @@ function addMovie() {
   } else if (historyList[userTypedText]) {
     historyList[userTypedText]++;
     makeTable(historyList);
-    writeLocalStorage(historyList);
+    writeLocalStorage(historyList, 'localHistoryList');
     return;
 
     // Else adds the userTypedText to historyList object with default value 1 and recreates the movie history table.
   } else {
     historyList[userTypedText] = 1;
     makeTable(historyList);
-    writeLocalStorage(historyList);
-    sessionList.push(userTypedText);
-    makeListWrap(sessionList);
-    writeSessionStorage(sessionList);
+    writeLocalStorage(historyList, 'localHistoryList');
+    movieList.push(userTypedText);
+    makeListWrap(movieList);
+    writeLocalStorage(movieList, 'localMovieList');
   }
 
   // Step 6: Call the clearInput function to clear the input field
@@ -130,24 +119,26 @@ function addMovie() {
 
 // This creates the move list based on the filter box user input
 filterInput.addEventListener('input', () => {
-  // This reads the move list array stored inside session storage
-  const sessionList = readSessionStorage();
+  // This reads the move list array stored inside local storage
+  const movieList = readLocalStorage('localMovieList');
   // This loads the text inside the filter box
   let inputText = document.getElementById('filter').value;
   // If statement used to determine what to write in the html list
   if (inputText) {
     // This filters through the movie list based on the filter box input and writes a new html list 
-    makeListWrap(sessionList.filter((keys) => keys.toLowerCase().includes(inputText.toLowerCase())));
+    makeListWrap(movieList.filter((keys) => keys.toLowerCase().includes(inputText.toLowerCase())));
   } else {
-    // If the filter box is empty, this writes the html list using the movie list array stored inside session storage
-    makeListWrap(sessionList);
+    // If the filter box is empty, this writes the html list using the movie list array stored inside local storage
+    makeListWrap(movieList);
   }
 });
 
 // This creates the movie history table based on local storage
 window.addEventListener('load', () => {
-  if (JSON.parse(window.localStorage.getItem('localMovieList'))) {
-    makeTable(JSON.parse(window.localStorage.getItem('localMovieList')));
+  if (JSON.parse(window.localStorage.getItem('localHistoryList'))) {
+    makeTable(JSON.parse(window.localStorage.getItem('localHistoryList')));
   }
-  sessionStorage.clear();
+  if (JSON.parse(window.localStorage.getItem('localMovieList'))) {
+    makeListWrap(JSON.parse(window.localStorage.getItem('localMovieList')));
+  }
 });
