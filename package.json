@@ -1,0 +1,19 @@
+{
+  "name": "moviestarter",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbeique/MovieStarter.zip.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lbeique/MovieStarter.zip/issues"
+  },
+  "homepage": "https://github.com/lbeique/MovieStarter.zip#readme",
+  "description": ""
+}
