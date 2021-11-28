@@ -7,13 +7,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lbeique/MovieStarter.zip.git"
+    "url": "git+https://github.com/lbeique/MovieStarter.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lbeique/MovieStarter.zip/issues"
+    "url": "https://github.com/lbeique/MovieStarter/issues"
   },
-  "homepage": "https://github.com/lbeique/MovieStarter.zip#readme",
+  "homepage": "https://github.com/lbeique/MovieStarter#readme",
   "description": ""
 }
