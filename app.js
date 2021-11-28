@@ -128,13 +128,18 @@ function addMovie() {
   clearInput();
 }
 
-// This creates the movie history table based on local storage
-filterInput.addEventListener('keypress', () => {
+// This creates the move list based on the filter box user input
+filterInput.addEventListener('input', () => {
+  // This reads the move list array stored inside session storage
   const sessionList = readSessionStorage();
+  // This loads the text inside the filter box
   let inputText = document.getElementById('filter').value;
+  // If statement used to determine what to write in the html list
   if (inputText) {
+    // This filters through the movie list based on the filter box input and writes a new html list 
     makeListWrap(sessionList.filter((keys) => keys.toLowerCase().includes(inputText.toLowerCase())));
   } else {
+    // If the filter box is empty, this writes the html list using the movie list array stored inside session storage
     makeListWrap(sessionList);
   }
 });
