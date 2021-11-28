@@ -96,14 +96,15 @@ function addMovie() {
     alert("Please Enter A Movie Name");
     return;
 
-    // First Else If checks if the movie exists, it adds 1 to the historyList object value for that entry and recreates the movie history table then it calls clearInput.
+    // First Else If checks if the movie exists in list, adds value to historyList, creates history table and writes list to local storage
   } else if (historyList[userTypedText]) {
     historyList[userTypedText]++;
     makeTable(historyList);
     writeLocalStorage(historyList, 'localHistoryList');
     return;
 
-    // Else adds the userTypedText to historyList object with default value 1 and recreates the movie history table.
+    // Else adds the input to the history list, creates the html history table, and writes to history list to local storage. 
+    // Then pushes input to movie list, creates the html movie list, and writes movielist to local storage.
   } else {
     historyList[userTypedText] = 1;
     makeTable(historyList);
@@ -133,7 +134,7 @@ filterInput.addEventListener('input', () => {
   }
 });
 
-// This creates the movie history table based on local storage
+// This creates the movie history table and movie list stored in local storage
 window.addEventListener('load', () => {
   if (JSON.parse(window.localStorage.getItem('localHistoryList'))) {
     makeTable(JSON.parse(window.localStorage.getItem('localHistoryList')));
