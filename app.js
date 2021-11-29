@@ -101,7 +101,6 @@ function addMovie() {
     historyList[userTypedText]++;
     makeTable(historyList);
     writeLocalStorage(historyList, 'localHistoryList');
-    return;
 
     // Else adds the input to the history list, creates the html history table, and writes to history list to local storage. 
     // Then pushes input to movie list, creates the html movie list, and writes movielist to local storage.
